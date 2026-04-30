@@ -56,19 +56,38 @@ button {
 }
 .topbar {
     display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 10px;
+    color: aliceblue;
+}
+
+/* ROW 1 (Hello) */
+.row-1 {
+    font-size: 18px;
+    font-weight: bold;
+    justify-content: space-between;
+}
+
+/* ROW 2 (search + cart) */
+.row-2 {
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 40px;
 }
+
+/* search */
 .search {
     padding: 20px;
-    width: 850px;
+    width: 700px;
     border-radius: 20px;
     border: none;
     font-size: 18px;
 }
-.icons a {
-    margin-left: 20px;
-    text-decoration: none;
+
+/* cart */
+.cart a {
     color: white;
+    text-decoration: none;
+    font-size: 18px;
 }
