@@ -4,6 +4,8 @@
 	<?php include 'includes/sidebar.php'; ?>
 
 	<main class="main-pane">
+		<?php include 'includes/inc.php'; ?>
+		
 		<section class="page-hero">
 			<p class="eyebrow">Contact</p>
 			<h1>Talk to the store team.</h1>

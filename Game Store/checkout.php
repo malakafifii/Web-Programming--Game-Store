@@ -4,6 +4,8 @@
 	<?php include 'includes/sidebar.php'; ?>
 
 	<main class="main-pane">
+		<?php include 'includes/inc.php'; ?>
+		
 		<section class="page-hero">
 			<p class="eyebrow">Checkout</p>
 			<h1>Finish your order.</h1>

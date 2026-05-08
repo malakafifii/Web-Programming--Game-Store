@@ -4,21 +4,7 @@
     <?php include 'includes/sidebar.php'; ?>
 
     <main class="main-pane">
-        <header class="topbar">
-            <form class="search-form" action="search.php" method="GET">
-                <input type="text" name="q" placeholder="Search games, consoles, accessories..." class="search-input">
-            </form>
-
-            <div class="topbar-icons">
-                <?php if(isset($_SESSION['user'])): ?>
-                    <span class="welcome-text">Hello, <?php echo htmlspecialchars($_SESSION['user']); ?></span>
-                <?php else: ?>
-                    <a href="login.php">Login</a>
-                <?php endif; ?>
-
-                <a href="cart.php">Cart (<?php echo isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0; ?>)</a>
-            </div>
-        </header>
+        <?php include 'includes/inc.php'; ?>
 
         <section class="hero-card">
             <div class="hero-copy">
@@ -26,8 +12,8 @@
                 <h1>Play More. <span>Pay Less.</span></h1>
                 <p>Discover the latest games, accessories, collectibles, and toys with a layout that keeps browsing fast and clear.</p>
                 <div class="hero-actions">
-                    <a class="btn btn-primary" href="#games">Shop Now</a>
-                    <a class="btn btn-secondary" href="#featured">Browse Games</a>
+                    <a class="btn btn-primary" href="#categories">Shop Now</a>
+                    <a class="btn btn-secondary" href="products.php">Browse Games</a>
                 </div>
             </div>
 
@@ -70,27 +56,21 @@
                     <p>Featured products</p>
                     <h2>Best sellers with a strong retail feel.</h2>
                 </div>
-                <a class="text-link" href="#">View all</a>
+                <a class="text-link" href="products.php">View all</a>
             </div>
 
             <div class="product-grid">
                 <?php
-                $featuredProducts = [
-                    ['Wireless Pro Controller', '$69.99', 'Best for precision play'],
-                    ['Spider Hero Collector Set', '$39.99', 'Limited edition display item'],
-                    ['Next-Gen RPG Bundle', '$59.99', 'Digital + physical edition'],
-                    ['RGB Gaming Headset', '$49.99', 'Comfortable for long sessions'],
-                ];
-
+                $featuredProducts = getFeaturedProducts(4);
                 foreach ($featuredProducts as $product): ?>
                     <article class="product-card">
                         <div class="product-art"></div>
                         <div class="product-copy">
-                            <h3><?php echo $product[0]; ?></h3>
-                            <p><?php echo $product[2]; ?></p>
+                            <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                            <p><?php echo htmlspecialchars($product['short_description']); ?></p>
                             <div class="product-meta">
-                                <span class="price"><?php echo $product[1]; ?></span>
-                                <a href="#" class="btn btn-small">Add to Cart</a>
+                                <span class="price">$<?php echo number_format($product['price'], 2); ?></span>
+                                <a href="ptoduct.php?id=<?php echo urlencode($product['slug']); ?>" class="btn btn-small">View</a>
                             </div>
                         </div>
                     </article>

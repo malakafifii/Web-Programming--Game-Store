@@ -4,6 +4,8 @@
 	<?php include 'includes/sidebar.php'; ?>
 
 	<main class="main-pane">
+		<?php include 'includes/inc.php'; ?>
+
 		<section class="page-hero">
 			<p class="eyebrow">About us</p>
 			<h1>Built for gamers, collectors, and families.</h1>
