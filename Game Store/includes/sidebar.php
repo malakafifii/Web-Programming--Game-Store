@@ -15,7 +15,6 @@
         <?php endif; ?>
         <a href="about.php" class="<?php echo $currentPage === 'about.php' ? 'active' : ''; ?>">About</a>
         <a href="contact.php" class="<?php echo $currentPage === 'contact.php' ? 'active' : ''; ?>">Contact</a>
-        <a href="search.php" class="<?php echo $currentPage === 'search.php' ? 'active' : ''; ?>">Search</a>
         <a href="cart.php" class="<?php echo $currentPage === 'cart.php' ? 'active' : ''; ?>">Cart</a>
     </nav>
 

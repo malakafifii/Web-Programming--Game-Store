@@ -17,11 +17,8 @@
                 </div>
             </div>
 
-            <div class="hero-visual" aria-hidden="true">
-                <div class="hero-ribbon"></div>
-                <div class="hero-card-image hero-card-image-large"></div>
-                <div class="hero-card-image hero-card-image-small"></div>
-                <div class="hero-controller"></div>
+            <div class="hero-visual">
+                <img src="images/thumbnail.png" alt="Gaming gear including Spider-Man 2, Call of Duty, controller, and headphones" style="width: 100%; height: auto; object-fit: contain;">
             </div>
         </section>
 
@@ -92,24 +89,6 @@
                     <h2>Popular picks that move quickly.</h2>
                 </div>
                 <a class="text-link" href="#">See trends</a>
-            </div>
-
-            <div class="trend-grid">
-                <article class="trend-card">
-                    <span>Top seller</span>
-                    <h3>Open-world action games</h3>
-                    <p>Big maps, strong replay value, and collector-friendly editions.</p>
-                </article>
-                <article class="trend-card">
-                    <span>Hot accessory</span>
-                    <h3>Hall-effect controllers</h3>
-                    <p>Responsive hardware designed for everyday play and longer life.</p>
-                </article>
-                <article class="trend-card">
-                    <span>Fan favorite</span>
-                    <h3>Display-ready figures</h3>
-                    <p>Clean shelves, bold packaging, and easy gift ideas.</p>
-                </article>
             </div>
         </section>
 
