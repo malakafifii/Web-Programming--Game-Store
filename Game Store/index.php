@@ -62,19 +62,26 @@
             <div class="product-grid">
                 <?php
                 $featuredProducts = getFeaturedProducts(4);
-                foreach ($featuredProducts as $product): ?>
-                    <article class="product-card">
-                        <div class="product-art"></div>
-                        <div class="product-copy">
-                            <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                            <p><?php echo htmlspecialchars($product['short_description']); ?></p>
-                            <div class="product-meta">
-                                <span class="price">$<?php echo number_format($product['price'], 2); ?></span>
-                                <a href="ptoduct.php?id=<?php echo urlencode($product['slug']); ?>" class="btn btn-small">View</a>
+                if (!empty($featuredProducts)):
+                    foreach ($featuredProducts as $product): ?>
+                        <article class="product-card">
+                            <div class="product-art"></div>
+                            <div class="product-copy">
+                                <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                                <p><?php echo htmlspecialchars($product['short_description']); ?></p>
+                                <div class="product-meta">
+                                    <span class="price">$<?php echo number_format($product['price'], 2); ?></span>
+                                    <a href="ptoduct.php?id=<?php echo urlencode($product['slug']); ?>" class="btn btn-small">View</a>
+                                </div>
                             </div>
-                        </div>
-                    </article>
-                <?php endforeach; ?>
+                        </article>
+                    <?php endforeach;
+                else: ?>
+                    <div class="panel full-col">
+                        <h3>No items available</h3>
+                        <p>The catalog is empty right now. Browse products later after an admin adds listings.</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </section>
 

@@ -1,4 +1,4 @@
-<?php session_start();
+<?php
 require_once __DIR__ . '/db.php';
 
 if (isset($_GET['add_to_cart']) && !empty($_GET['product'])) {
