@@ -83,8 +83,10 @@ function getProductById(int $id): ?array
 
 function searchProducts(string $query): array
 {
-    $stmt = db()->prepare('SELECT * FROM products WHERE name LIKE :query OR short_description LIKE :query OR description LIKE :query ORDER BY id ASC');
-    $stmt->execute(['query' => '%' . $query . '%']);
+    $sql = 'SELECT * FROM products WHERE name LIKE :q1 OR short_description LIKE :q2 OR description LIKE :q3 ORDER BY id ASC';
+    $stmt = db()->prepare($sql);
+    $param = '%' . $query . '%';
+    $stmt->execute(['q1' => $param, 'q2' => $param, 'q3' => $param]);
     return $stmt->fetchAll();
 }
 
