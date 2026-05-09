@@ -6,11 +6,11 @@ CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     slug VARCHAR(100) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
-    short_description VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     category VARCHAR(100) NOT NULL,
-    sku VARCHAR(100) DEFAULT NULL,
+    image VARCHAR(255) DEFAULT NULL,
+    stock_status ENUM('in_stock','out_of_stock') NOT NULL DEFAULT 'in_stock',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

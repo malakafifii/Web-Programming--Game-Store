@@ -11,6 +11,11 @@ $errorMessage = '';
 
 $imagePath = null;
 
+if (!empty($_SESSION['success_message'])) {
+    $successMessage = $_SESSION['success_message'];
+    unset($_SESSION['success_message']);
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!empty($_FILES['image']['name'])) {
@@ -30,15 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         createProduct([
-                'name' => $_POST['name'] ?? '',
-                'slug' => $_POST['slug'] ?? '',
-                'short_description' => $_POST['short_description'] ?? '',
-                'description' => $_POST['description'] ?? '',
-                'price' => $_POST['price'] ?? '',
-                'category' => $_POST['category'] ?? '',
-                'sku' => $_POST['sku'] ?? '',
-                'image' => $imagePath,
-                'stock_status' => $_POST['stock_status'] ?? 'in_stock'
+            'name' => $_POST['name'] ?? '',
+            'slug' => $_POST['slug'] ?? '',
+            'description' => $_POST['description'] ?? '',
+            'price' => $_POST['price'] ?? '',
+            'category' => $_POST['category'] ?? '',
+            'image' => $imagePath,
+            'stock_status' => $_POST['stock_status'] ?? 'in_stock'
         ]);
 
         $_SESSION['success_message'] = "Product added successfully!";
@@ -83,7 +86,7 @@ include 'includes/header.php';
                         <label class="field full-col">Description<textarea name="description" rows="5" required></textarea></label>
                         <label class="field">Price<input type="number" name="price" step="0.01" min="0.01" required></label>
                         <label class="field">Category<input type="text" name="category" placeholder="Toys, Video Games, Board Games" required></label>
-                        <label class="field full-col">SKU<input type="text" name="sku" placeholder="Optional stock code"></label>
+                        <!-- SKU removed per request -->
 
                         <label class="field full-col">Product Image
                             <input type="file" name="image" accept="image/*" required>

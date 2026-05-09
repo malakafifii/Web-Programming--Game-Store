@@ -32,10 +32,12 @@
 				<?php if (!empty($catalog)): ?>
 					<?php foreach ($catalog as $item): ?>
 						<article class="product-card">
-							<div class="product-art"></div>
+							<div class="product-art">
+								<img src="<?php echo !empty($item['image']) ? htmlspecialchars($item['image']) : 'images/thumbnail.png'; ?>" alt="<?php echo htmlspecialchars($item['name']); ?>" style="width:100%;height:100%;object-fit:cover;">
+							</div>
 							<div class="product-copy">
 								<h3><?php echo htmlspecialchars($item['name']); ?></h3>
-								<p><?php echo htmlspecialchars($item['short_description']); ?></p>
+								<p><?php echo htmlspecialchars(mb_substr($item['description'], 0, 140)); ?></p>
 								<div class="badge-row">
 									<span class="badge"><?php echo htmlspecialchars($item['category']); ?></span>
 								</div>

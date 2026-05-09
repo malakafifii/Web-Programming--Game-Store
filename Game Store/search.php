@@ -24,10 +24,12 @@
 					<?php else:
 						foreach ($results as $product): ?>
 							<article class="product-card">
-								<div class="product-art"></div>
+								<div class="product-art">
+									<img src="<?php echo !empty($product['image']) ? htmlspecialchars($product['image']) : 'images/thumbnail.png'; ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" style="width:100%;height:100%;object-fit:cover;">
+								</div>
 								<div class="product-copy">
 									<h3><?php echo htmlspecialchars($product['name']); ?></h3>
-									<p><?php echo htmlspecialchars($product['short_description']); ?></p>
+									<p><?php echo htmlspecialchars(mb_substr($product['description'], 0, 140)); ?></p>
 									<div class="product-meta">
 										<span class="price">$<?php echo number_format($product['price'], 2); ?></span>
 										<a href="ptoduct.php?id=<?php echo urlencode($product['slug']); ?>" class="btn btn-small">View</a>

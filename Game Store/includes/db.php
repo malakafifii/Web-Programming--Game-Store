@@ -83,10 +83,10 @@ function getProductById(int $id): ?array
 
 function searchProducts(string $query): array
 {
-    $sql = 'SELECT * FROM products WHERE name LIKE :q1 OR short_description LIKE :q2 OR description LIKE :q3 ORDER BY id ASC';
+    $sql = 'SELECT * FROM products WHERE name LIKE :q OR description LIKE :q ORDER BY id ASC';
     $stmt = db()->prepare($sql);
     $param = '%' . $query . '%';
-    $stmt->execute(['q1' => $param, 'q2' => $param, 'q3' => $param]);
+    $stmt->execute(['q' => $param]);
     return $stmt->fetchAll();
 }
 
@@ -198,19 +198,16 @@ function makeUniqueSlug(string $value): string
 function createProduct(array $productData): int
 {
     $name = trim($productData['name'] ?? '');
-    $shortDescription = trim($productData['short_description'] ?? '');
     $description = trim($productData['description'] ?? '');
     $price = (float) ($productData['price'] ?? 0);
     $category = trim($productData['category'] ?? '');
-    $sku = trim($productData['sku'] ?? '');
     $slug = trim($productData['slug'] ?? '');
 
-    // ✅ NEW FIELDS FIXED
     $image = $productData['image'] ?? null;
     $stockStatus = $productData['stock_status'] ?? 'in_stock';
 
-    if ($name === '' || $shortDescription === '' || $description === '' || $category === '') {
-        throw new InvalidArgumentException('All product fields except SKU are required.');
+    if ($name === '' || $description === '' || $category === '') {
+        throw new InvalidArgumentException('Name, description, category and price are required.');
     }
 
     if ($price <= 0) {
@@ -225,19 +222,17 @@ function createProduct(array $productData): int
 
     $stmt = db()->prepare(
         'INSERT INTO products 
-        (slug, name, short_description, description, price, category, sku, image, stock_status)
+        (slug, name, description, price, category, image, stock_status)
         VALUES 
-        (:slug, :name, :short_description, :description, :price, :category, :sku, :image, :stock_status)'
+        (:slug, :name, :description, :price, :category, :image, :stock_status)'
     );
 
     $stmt->execute([
         'slug' => $slug,
         'name' => $name,
-        'short_description' => $shortDescription,
         'description' => $description,
         'price' => $price,
         'category' => $category,
-        'sku' => $sku !== '' ? $sku : null,
         'image' => $image,
         'stock_status' => $stockStatus,
     ]);

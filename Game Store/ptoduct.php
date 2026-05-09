@@ -18,16 +18,18 @@
 		<section class="page-hero">
 			<p class="eyebrow">Product detail</p>
 			<h1><?php echo htmlspecialchars($product['name']); ?></h1>
-			<p><?php echo htmlspecialchars($product['short_description']); ?></p>
+			<p><?php echo htmlspecialchars(mb_substr($product['description'], 0, 180)); ?></p>
 		</section>
 
 		<section class="product-detail">
-			<div class="detail-art"></div>
+			<div class="detail-art">
+				<img src="<?php echo !empty($product['image']) ? htmlspecialchars($product['image']) : 'images/thumbnail.png'; ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" style="width:100%;height:auto;object-fit:contain;">
+			</div>
 			<article class="panel">
 				<h2><?php echo htmlspecialchars($product['name']); ?></h2>
 				<div class="badge-row">
 					<span class="badge"><?php echo htmlspecialchars($product['category']); ?></span>
-					<span class="badge">In stock</span>
+					<span class="badge"><?php echo ($product['stock_status'] ?? 'in_stock') === 'in_stock' ? 'In stock' : 'Out of stock'; ?></span>
 					<span class="badge">Free returns</span>
 				</div>
 				<p><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>
@@ -37,7 +39,7 @@
 				</div>
 				<ul class="stack-list">
 					<li><span>Category</span><strong><?php echo htmlspecialchars($product['category']); ?></strong></li>
-					<li><span>SKU</span><strong><?php echo htmlspecialchars($product['sku']); ?></strong></li>
+					<li><span>Status</span><strong><?php echo ($product['stock_status'] ?? 'in_stock') === 'in_stock' ? 'In stock' : 'Out of stock'; ?></strong></li>
 					<li><span>Details</span><strong>Fully supported by the online catalog.</strong></li>
 				</ul>
 			</article>
