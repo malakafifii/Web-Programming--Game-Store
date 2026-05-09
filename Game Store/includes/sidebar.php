@@ -21,9 +21,9 @@
     <div class="sidebar-footer">
         <div class="sidebar-badge">All ages. All play styles.</div>
         <div class="sidebar-socials" aria-label="Social links">
-            <a href="#" aria-label="Instagram">IG</a>
-            <a href="#" aria-label="Facebook">FB</a>
-            <a href="#" aria-label="X">X</a>
+            <img width="48" height="48" src="https://img.icons8.com/fluency/48/facebook.png" alt="facebook"/>
+            <img width="48" height="48" src="https://img.icons8.com/fluency/48/instagram-new.png" alt="instagram-new"/>
+            <img width="48" height="48" src="https://img.icons8.com/color/48/google-maps.png" alt="google-maps"/>
         </div>
     </div>
 </aside>

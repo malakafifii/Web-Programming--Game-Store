@@ -205,6 +205,10 @@ function createProduct(array $productData): int
     $sku = trim($productData['sku'] ?? '');
     $slug = trim($productData['slug'] ?? '');
 
+    // ✅ NEW FIELDS FIXED
+    $image = $productData['image'] ?? null;
+    $stockStatus = $productData['stock_status'] ?? 'in_stock';
+
     if ($name === '' || $shortDescription === '' || $description === '' || $category === '') {
         throw new InvalidArgumentException('All product fields except SKU are required.');
     }
@@ -214,18 +218,18 @@ function createProduct(array $productData): int
     }
 
     $slug = $slug !== '' ? normalizeSlug($slug) : makeUniqueSlug($name);
-    if ($slug === '') {
-        $slug = makeUniqueSlug($name);
-    }
 
     if (slugExists($slug)) {
         $slug = makeUniqueSlug($slug);
     }
 
     $stmt = db()->prepare(
-        'INSERT INTO products (slug, name, short_description, description, price, category, sku)
-         VALUES (:slug, :name, :short_description, :description, :price, :category, :sku)'
+        'INSERT INTO products 
+        (slug, name, short_description, description, price, category, sku, image, stock_status)
+        VALUES 
+        (:slug, :name, :short_description, :description, :price, :category, :sku, :image, :stock_status)'
     );
+
     $stmt->execute([
         'slug' => $slug,
         'name' => $name,
@@ -234,6 +238,8 @@ function createProduct(array $productData): int
         'price' => $price,
         'category' => $category,
         'sku' => $sku !== '' ? $sku : null,
+        'image' => $image,
+        'stock_status' => $stockStatus,
     ]);
 
     return (int) db()->lastInsertId();
