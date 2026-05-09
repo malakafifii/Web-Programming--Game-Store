@@ -1,6 +1,6 @@
 <?php
+session_start();
 require_once __DIR__ . '/includes/db.php';
-
 $loginError = '';
 $successMessage = '';
 
@@ -10,8 +10,8 @@ if (!empty($_SESSION['success_message'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$username = trim($_POST['username'] ?? '');
-	$password = trim($_POST['password'] ?? '');
+    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $password = isset($_POST['password']) ? trim($_POST['password']) : '';
 
 	$user = authenticateUser($username, $password);
 	if ($user !== null) {
@@ -40,7 +40,7 @@ include 'includes/header.php'; ?>
 		<section class="content-grid">
 			<form class="form-panel two-col" action="login.php" method="post">
 				<h2>Sign in</h2>
-				<p>Use your buyer account or the default admin account. Admin defaults to username <strong>amin</strong> and password <strong>admin</strong>.</p>
+				<p>Use your buyer account or the default admin account. Admin defaults to username <strong>admin</strong> and password <strong>admin</strong>.</p>
 				<?php if ($successMessage !== ''): ?>
 					<p class="form-success"><?php echo htmlspecialchars($successMessage); ?></p>
 				<?php endif; ?>
@@ -48,7 +48,7 @@ include 'includes/header.php'; ?>
 					<p class="form-error"><?php echo htmlspecialchars($loginError); ?></p>
 				<?php endif; ?>
 				<div class="form-grid">
-					<label class="field full-col">Username<input type="text" name="username" placeholder="amin"></label>
+					<label class="field full-col">Username<input type="text" name="username" placeholder="admin"></label>
 					<label class="field full-col">Password<input type="password" name="password" placeholder="admin"></label>
 				</div>
 				<div class="form-actions">

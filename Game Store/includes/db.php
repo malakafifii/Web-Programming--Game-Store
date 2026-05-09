@@ -105,7 +105,7 @@ function ensureAuthTables(): void
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
     );
 
-    $adminUsername = 'amin';
+    $adminUsername = 'admin';
     $adminPassword = 'admin';
     $stmt = db()->prepare('INSERT IGNORE INTO users (username, password_hash, role) VALUES (:username, :password_hash, :role)');
     $stmt->execute([

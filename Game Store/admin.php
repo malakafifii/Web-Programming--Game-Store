@@ -1,6 +1,6 @@
 <?php
+session_start();
 require_once __DIR__ . '/includes/db.php';
-
 if (!isAdmin()) {
     header('Location: login.php');
     exit;
@@ -12,16 +12,19 @@ $errorMessage = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         createProduct([
-            'name' => $_POST['name'] ?? '',
-            'slug' => $_POST['slug'] ?? '',
-            'short_description' => $_POST['short_description'] ?? '',
-            'description' => $_POST['description'] ?? '',
-            'price' => $_POST['price'] ?? '',
-            'category' => $_POST['category'] ?? '',
-            'sku' => $_POST['sku'] ?? '',
+                'name' => $_POST['name'] ?? '',
+                'slug' => $_POST['slug'] ?? '',
+                'short_description' => $_POST['short_description'] ?? '',
+                'description' => $_POST['description'] ?? '',
+                'price' => $_POST['price'] ?? '',
+                'category' => $_POST['category'] ?? '',
+                'sku' => $_POST['sku'] ?? '',
         ]);
 
-        $successMessage = 'Product added to the catalog.';
+        $_SESSION['success_message'] = 'Product added to the catalog.';
+        header('Location: admin.php');
+        exit;
+
     } catch (Throwable $exception) {
         $errorMessage = $exception->getMessage();
     }
