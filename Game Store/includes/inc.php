@@ -5,7 +5,7 @@
 
     <div class="topbar-icons">
         <?php if(isset($_SESSION['user'])): ?>
-            <span class="welcome-text">Hello, <?php echo htmlspecialchars($_SESSION['user']); ?></span>
+            Hello,<span class="welcome-text"><?php echo ucfirst(htmlspecialchars($_SESSION['user'])  ); ?></span>
             <a href="logout.php">Logout</a>
         <?php else: ?>
             <a href="login.php">Login</a>
