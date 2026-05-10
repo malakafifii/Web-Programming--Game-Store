@@ -65,14 +65,6 @@ function getProductsByCategory(?string $category = null): array
     return $stmt->fetchAll();
 }
 
-function getProductBySlug(string $slug): ?array
-{
-    $stmt = db()->prepare('SELECT * FROM products WHERE slug = :slug');
-    $stmt->execute(['slug' => $slug]);
-    $product = $stmt->fetch();
-    return $product !== false ? $product : null;
-}
-
 function getProductById(int $id): ?array
 {
     $stmt = db()->prepare('SELECT * FROM products WHERE id = :id');
@@ -83,10 +75,10 @@ function getProductById(int $id): ?array
 
 function searchProducts(string $query): array
 {
-    $sql = 'SELECT * FROM products WHERE name LIKE :q OR description LIKE :q ORDER BY id ASC';
+    $sql = 'SELECT * FROM products WHERE name LIKE :q1 OR description LIKE :q2 ORDER BY id ASC';
     $stmt = db()->prepare($sql);
     $param = '%' . $query . '%';
-    $stmt->execute(['q' => $param]);
+    $stmt->execute(['q1' => $param, 'q2' => $param]);
     return $stmt->fetchAll();
 }
 
@@ -165,35 +157,7 @@ function authenticateUser(string $username, string $password): ?array
     return $user;
 }
 
-function normalizeSlug(string $value): string
-{
-    $slug = strtolower(trim($value));
-    $slug = preg_replace('/[^a-z0-9]+/i', '-', $slug);
-    $slug = trim($slug, '-');
-
-    return $slug !== '' ? $slug : 'product';
-}
-
-function slugExists(string $slug): bool
-{
-    $stmt = db()->prepare('SELECT 1 FROM products WHERE slug = :slug LIMIT 1');
-    $stmt->execute(['slug' => $slug]);
-    return $stmt->fetchColumn() !== false;
-}
-
-function makeUniqueSlug(string $value): string
-{
-    $baseSlug = normalizeSlug($value);
-    $slug = $baseSlug;
-    $suffix = 2;
-
-    while (slugExists($slug)) {
-        $slug = $baseSlug . '-' . $suffix;
-        $suffix++;
-    }
-
-    return $slug;
-}
+// Slug utilities removed — project now uses numeric IDs.
 
 function createProduct(array $productData): int
 {
@@ -201,7 +165,6 @@ function createProduct(array $productData): int
     $description = trim($productData['description'] ?? '');
     $price = (float) ($productData['price'] ?? 0);
     $category = trim($productData['category'] ?? '');
-    $slug = trim($productData['slug'] ?? '');
 
     $image = $productData['image'] ?? null;
     $stockStatus = $productData['stock_status'] ?? 'in_stock';
@@ -214,21 +177,14 @@ function createProduct(array $productData): int
         throw new InvalidArgumentException('Price must be greater than zero.');
     }
 
-    $slug = $slug !== '' ? normalizeSlug($slug) : makeUniqueSlug($name);
-
-    if (slugExists($slug)) {
-        $slug = makeUniqueSlug($slug);
-    }
-
     $stmt = db()->prepare(
         'INSERT INTO products 
-        (slug, name, description, price, category, image, stock_status)
+        (name, description, price, category, image, stock_status)
         VALUES 
-        (:slug, :name, :description, :price, :category, :image, :stock_status)'
+        (:name, :description, :price, :category, :image, :stock_status)'
     );
 
     $stmt->execute([
-        'slug' => $slug,
         'name' => $name,
         'description' => $description,
         'price' => $price,
@@ -238,6 +194,54 @@ function createProduct(array $productData): int
     ]);
 
     return (int) db()->lastInsertId();
+}
+
+function updateProduct(int $id, array $productData): bool
+{
+    $name = trim($productData['name'] ?? '');
+    $description = trim($productData['description'] ?? '');
+    $price = (float) ($productData['price'] ?? 0);
+    $category = trim($productData['category'] ?? '');
+    $image = $productData['image'] ?? null;
+    $stockStatus = $productData['stock_status'] ?? 'in_stock';
+
+    if ($name === '' || $description === '' || $category === '') {
+        throw new InvalidArgumentException('Name, description, category and price are required.');
+    }
+
+    if ($price <= 0) {
+        throw new InvalidArgumentException('Price must be greater than zero.');
+    }
+
+    // If image is null, don't update the image column
+    if ($image !== null) {
+        $stmt = db()->prepare(
+            'UPDATE products SET name = :name, description = :description, price = :price, category = :category, image = :image, stock_status = :stock_status WHERE id = :id'
+        );
+        $params = [
+            'name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'category' => $category,
+            'image' => $image,
+            'stock_status' => $stockStatus,
+            'id' => $id,
+        ];
+    } else {
+        $stmt = db()->prepare(
+            'UPDATE products SET name = :name, description = :description, price = :price, category = :category, stock_status = :stock_status WHERE id = :id'
+        );
+        $params = [
+            'name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'category' => $category,
+            'stock_status' => $stockStatus,
+            'id' => $id,
+        ];
+    }
+
+    return $stmt->execute($params);
 }
 
 function isAdmin(): bool

@@ -30,20 +30,17 @@
 
             <div class="category-grid">
                 <?php
-                $categories = [
-                    ['Games', 'Digital + physical releases', 'games-category'],
-                    ['Accessories', 'Controllers, headsets, charging gear', 'accessories'],
-                    ['Collectibles', 'Figures, Funko Pops, display pieces', 'collectibles'],
-                    ['Toys', 'Action figures, plush, and playsets', 'toys'],
-                ];
-
-                foreach ($categories as $category): ?>
-                    <article class="category-card" id="<?php echo $category[2]; ?>">
-                        <span class="category-icon"><?php echo strtoupper(substr($category[0], 0, 1)); ?></span>
-                        <h3><?php echo $category[0]; ?></h3>
-                        <p><?php echo $category[1]; ?></p>
-                    </article>
-                <?php endforeach; ?>
+                $availableCategories = getCategories();
+                if (!empty($availableCategories)):
+                    foreach ($availableCategories as $category): ?>
+                        <a href="products.php?category=<?php echo urlencode($category); ?>" class="category-card" style="text-decoration: none;">
+                            <span class="category-icon"><?php echo strtoupper(substr($category, 0, 1)); ?></span>
+                            <h3><?php echo htmlspecialchars($category); ?></h3>
+                        </a>
+                    <?php endforeach;
+                else: ?>
+                    <p>No categories available yet.</p>
+                <?php endif; ?>
             </div>
         </section>
 
@@ -70,7 +67,7 @@
                                 <p><?php echo htmlspecialchars(mb_substr($product['description'], 0, 120)); ?></p>
                                 <div class="product-meta">
                                     <span class="price">$<?php echo number_format($product['price'], 2); ?></span>
-                                    <a href="ptoduct.php?id=<?php echo urlencode($product['slug']); ?>" class="btn btn-small">View</a>
+                                    <a href="ptoduct.php?id=<?php echo urlencode($product['id']); ?>" class="btn btn-small">View</a>
                                 </div>
                             </div>
                         </article>
@@ -84,23 +81,6 @@
             </div>
         </section>
 
-        <section class="section-block alt-surface" id="trending">
-            <div class="section-heading split">
-                <div>
-                    <p>Trending now</p>
-                    <h2>Popular picks that move quickly.</h2>
-                </div>
-                <a class="text-link" href="#">See trends</a>
-            </div>
-        </section>
-
-        <section class="section-block deals-band" id="deals">
-            <div>
-                <p>Deals and discounts</p>
-                <h2>Limited-time offers on games, accessories, and toys.</h2>
-            </div>
-            <a class="btn btn-primary" href="#">Shop Deals</a>
-        </section>
     </main>
 </div>
 

@@ -4,8 +4,8 @@
 	<?php include 'includes/sidebar.php'; ?>
 
 	<?php
-	$productSlug = isset($_GET['id']) ? trim($_GET['id']) : '';
-	$product = $productSlug ? getProductBySlug($productSlug) : null;
+	$productId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+	$product = $productId ? getProductById($productId) : null;
 	if (!$product) {
 	    header('Location: products.php');
 	    exit;
@@ -33,9 +33,24 @@
 					<span class="badge">Free returns</span>
 				</div>
 				<p><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>
+				<?php $isOutOfStock = ($product['stock_status'] ?? 'in_stock') === 'out_of_stock'; ?>
 				<div class="product-meta" style="margin: 20px 0;">
 					<span class="price">$<?php echo number_format($product['price'], 2); ?></span>
-					<a href="?add_to_cart=1&id=<?php echo urlencode($product['slug']); ?>&product=<?php echo urlencode($product['name']); ?>&price=<?php echo urlencode($product['price']); ?>" class="btn btn-primary">Add to Cart</a>
+				<div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+					<div style="display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 8px; padding: 0 8px; opacity: <?php echo $isOutOfStock ? '0.5' : '1'; ?>;">
+						<button type="button" onclick="<?php echo $isOutOfStock ? 'return false;' : "document.getElementById('qty-input').value = Math.max(1, parseInt(document.getElementById('qty-input').value) - 1)"; ?>" class="btn" style="background: none; border: none; padding: 8px; cursor: <?php echo $isOutOfStock ? 'not-allowed' : 'pointer'; ?>; font-size: 1.2rem;" <?php echo $isOutOfStock ? 'disabled' : ''; ?>>−</button>
+						<input type="number" id="qty-input" value="1" min="1" style="width: 50px; text-align: center; border: none; background: none;" <?php echo $isOutOfStock ? 'disabled' : ''; ?> />
+						<button type="button" onclick="<?php echo $isOutOfStock ? 'return false;' : "document.getElementById('qty-input').value = parseInt(document.getElementById('qty-input').value) + 1"; ?>" class="btn" style="background: none; border: none; padding: 8px; cursor: <?php echo $isOutOfStock ? 'not-allowed' : 'pointer'; ?>; font-size: 1.2rem;" <?php echo $isOutOfStock ? 'disabled' : ''; ?>>+</button>
+					</div>
+					<?php if ($isOutOfStock): ?>
+						<button class="btn btn-primary" style="background: #ccc; color: #666; cursor: not-allowed;" disabled>Out of Stock</button>
+					<?php else: ?>
+						<a href="?add_to_cart=1&id=<?php echo urlencode($product['id']); ?>&product=<?php echo urlencode($product['name']); ?>&price=<?php echo urlencode($product['price']); ?>&qty=" onclick="this.href += document.getElementById('qty-input').value;" class="btn btn-primary">Add to Cart</a>
+					<?php endif; ?>
+					<?php if (isAdmin()): ?>
+						<a href="admin.php?edit=<?php echo (int)$product['id']; ?>" class="btn btn-secondary">Edit</a>
+					<?php endif; ?>
+				</div>
 				</div>
 				<ul class="stack-list">
 					<li><span>Category</span><strong><?php echo htmlspecialchars($product['category']); ?></strong></li>

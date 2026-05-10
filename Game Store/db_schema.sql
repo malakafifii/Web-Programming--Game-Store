@@ -4,7 +4,6 @@ USE toy_store;
 DROP TABLE IF EXISTS products;
 CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    slug VARCHAR(100) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     price DECIMAL(10,2) NOT NULL,

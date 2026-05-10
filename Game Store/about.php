@@ -32,11 +32,6 @@
 					<li><span>Collectibles and toys</span><strong>Figures, Funko Pops, plush, and playsets</strong></li>
 				</ul>
 			</article>
-
-			<article class="panel full-col">
-				<h2>Why this layout works</h2>
-				<p>The homepage uses a left rail, a strong hero, and modular product sections so every other page can inherit the same visual language and stay easy to extend.</p>
-			</article>
 		</section>
 	</main>
 </div>

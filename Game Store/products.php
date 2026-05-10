@@ -41,10 +41,10 @@
 								<div class="badge-row">
 									<span class="badge"><?php echo htmlspecialchars($item['category']); ?></span>
 								</div>
-								<div class="product-meta">
-									<span class="price">$<?php echo number_format($item['price'], 2); ?></span>
-									<a href="ptoduct.php?id=<?php echo urlencode($item['slug']); ?>" class="btn btn-small">View</a>
-								</div>
+							<div class="product-meta">
+								<span class="price">$<?php echo number_format($item['price'], 2); ?></span>
+									<a href="ptoduct.php?id=<?php echo urlencode($item['id']); ?>" class="btn btn-small">View</a>
+							</div>
 							</div>
 						</article>
 					<?php endforeach; ?>

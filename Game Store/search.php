@@ -32,7 +32,7 @@
 									<p><?php echo htmlspecialchars(mb_substr($product['description'], 0, 140)); ?></p>
 									<div class="product-meta">
 										<span class="price">$<?php echo number_format($product['price'], 2); ?></span>
-										<a href="ptoduct.php?id=<?php echo urlencode($product['slug']); ?>" class="btn btn-small">View</a>
+									<a href="ptoduct.php?id=<?php echo urlencode($product['id']); ?>" class="btn btn-small">View</a>
 									</div>
 								</div>
 							</article>
