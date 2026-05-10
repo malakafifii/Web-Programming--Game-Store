@@ -511,6 +511,44 @@ a {
     padding-top: 8px;
 }
 
+.links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.links a {
+    position: relative;
+    width: fit-content;
+    color: rgba(255,255,255,0.72);
+    font-weight: 600;
+    transition:
+            color 0.25s ease,
+            transform 0.25s ease;
+}
+
+/* animated underline */
+.links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0%;
+    height: 2px;
+    background: var(--red);
+    border-radius: 999px;
+    transition: width 0.25s ease;
+}
+
+.links a:hover {
+    color: #ffffff;
+    transform: translateX(4px);
+}
+
+.links a:hover::after {
+    width: 100%;
+}
+
 .price {
     font-size: 1.18rem;
     font-weight: 900;

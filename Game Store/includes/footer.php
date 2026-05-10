@@ -5,7 +5,7 @@
 			<p>Curated picks for gamers, collectors, and toy fans.</p>
 		</div>
 
-		<div>
+		<div class="links">
 			<h4>Quick Links</h4>
 			<a href="index.php">Home</a>
 			<a href="products.php">Products</a>
