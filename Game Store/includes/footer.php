@@ -7,11 +7,13 @@
 
 		<div>
 			<h4>Quick Links</h4>
+            <div class = "links">
 			<a href="index.php">Home</a>
 			<a href="products.php">Products</a>
 			<a href="about.php">About</a>
 			<a href="contact.php">Contact</a>
 			<a href="search.php">Search</a>
+            </div>
 		</div>
 
 		<div>

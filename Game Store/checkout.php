@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $subtotal += $item['price'] * $item['qty'];
         }
         
-        $shipping = $subtotal > 0 ? 0 : 0;
+        $shipping = $subtotal > 0 ? 80 : 0;
         $total = $subtotal + $shipping;
         
         // Store order in session
@@ -66,7 +66,7 @@ include 'includes/header.php';
 			$itemCount += $item['qty'];
 		}
 		
-		$shipping = $subtotal > 0 ? 0 : 0;
+		$shipping = $subtotal > 0 ? 80 : 0;
 		$total = $subtotal + $shipping;
 		?>
 		
