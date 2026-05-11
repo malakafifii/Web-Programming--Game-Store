@@ -40,6 +40,19 @@ if (isset($_GET['edit'])) {
     }
 }
 
+// Handle delete request
+if (isset($_GET['delete'])) {
+    $deleteId = (int) $_GET['delete'];
+    try {
+        delteProduct($deleteId);
+        $_SESSION['success_message'] = "Product deleted successfully!";
+        header("Location: admin.php");
+        exit;
+    } catch (Throwable $e) {
+        $errorMessage = "Error deleting product: " . $e->getMessage();
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!empty($_FILES['image']['name'])) {
@@ -166,7 +179,10 @@ include 'includes/header.php';
                             <li style="display: flex; align-items: center; gap: 16px; justify-content: space-between;">
                                 <strong><?php echo htmlspecialchars($product['name']); ?></strong>
                                 <span style="flex: 1; text-align: center; font-size: 0.9em; color: var(--text-secondary);"><?php echo htmlspecialchars($product['category']); ?></span>
-                                <a class="btn btn-small" href="admin.php?edit=<?php echo (int)$product['id']; ?>">Edit</a>
+                                <div style="display: flex; gap: 8px;">
+                                    <a class="btn btn-small" href="admin.php?edit=<?php echo (int)$product['id']; ?>">Edit</a>
+                                    <a class="btn btn-small" href="admin.php?delete=<?php echo (int)$product['id']; ?>" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                                </div>
                             </li>
                         <?php endforeach; ?>
                     </ul>

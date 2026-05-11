@@ -10,6 +10,9 @@
     <nav class="sidebar-nav" aria-label="Primary">
         <a href="index.php" class="<?php echo $currentPage === 'index.php' ? 'active' : ''; ?>">Home</a>
         <a href="products.php" class="<?php echo $currentPage === 'products.php' ? 'active' : ''; ?>">Products</a>
+        <?php if (!empty($_SESSION['user_id'])): ?>
+            <a href="user_orders.php" class="<?php echo $currentPage === 'user_orders.php' ? 'active' : ''; ?>">My Orders</a>
+        <?php endif; ?>
         <?php if (isAdmin()): ?>
             <a href="admin.php" class="<?php echo $currentPage === 'admin.php' ? 'active' : ''; ?>">Add Products</a>
             <a href="admin_orders.php" class="<?php echo $currentPage === 'admin_orders.php' ? 'active' : ''; ?>">Orders Dashboard</a>

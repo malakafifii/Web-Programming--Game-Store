@@ -24,7 +24,6 @@
 				<label class="field" style="display:block; margin-top:14px;">Message<textarea name="message" placeholder="How can we help?"></textarea></label>
 				<div class="form-actions">
 					<button class="btn btn-primary" type="submit">Send Message</button>
-					<a class="btn btn-secondary" href="mailto:support@gamestore.local">Email Us</a>
 				</div>
 			</form>
 

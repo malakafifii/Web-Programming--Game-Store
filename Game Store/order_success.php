@@ -18,7 +18,7 @@ if (!$orderData) {
 
 $savedOrders = $_SESSION['saved_orders'] ?? [];
 if (!isset($savedOrders[$orderToken])) {
-	$orderStmt = db()->prepare('INSERT INTO orders (email, payment) VALUES (:email, :payment)');
+	$orderStmt = db()->prepare('INSERT INTO orders (user_id, email, payment) VALUES (:user_id, :email, :payment)');
 	$itemStmt = db()->prepare(
 		'INSERT INTO order_items (order_id, product_Id, quantity, price)
 		 VALUES (:order_id, :product_id, :quantity, :price)'
@@ -26,7 +26,9 @@ if (!isset($savedOrders[$orderToken])) {
 
 	db()->beginTransaction();
 	try {
+		$userId = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
 		$orderStmt->execute([
+			'user_id' => $userId,
 			'email' => $orderData['email'],
 			'payment' => $orderData['payment'],
 		]);

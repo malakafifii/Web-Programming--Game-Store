@@ -1,4 +1,6 @@
-<?php include 'includes/header.php'; ?>
+<?php include 'includes/header.php';
+require_once __DIR__ . '/includes/db.php';
+?>
 
 <div class="layout">
 	<?php include 'includes/sidebar.php'; ?>
@@ -9,6 +11,19 @@
 	if (!$product) {
 	    header('Location: products.php');
 	    exit;
+	}
+	
+	// Handle delete request
+	if (isset($_GET['delete']) && isAdmin()) {
+	    $deleteId = (int) $_GET['delete'];
+	    try {
+	        delteProduct($deleteId);
+	        $_SESSION['success_message'] = "Product deleted successfully!";
+	        header("Location: products.php");
+	        exit;
+	    } catch (Throwable $e) {
+	        $errorMessage = "Error deleting product: " . $e->getMessage();
+	    }
 	}
 	?>
 
@@ -49,6 +64,7 @@
 					<?php endif; ?>
 					<?php if (isAdmin()): ?>
 						<a href="admin.php?edit=<?php echo (int)$product['id']; ?>" class="btn btn-secondary">Edit</a>
+						<a href="?delete=<?php echo (int)$product['id']; ?>" class="btn btn-secondary" style="background: #dc3545; border-color: #dc3545;" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
 					<?php endif; ?>
 				</div>
 				</div>

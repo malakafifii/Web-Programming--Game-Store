@@ -47,8 +47,8 @@ include 'includes/header.php';
 				<?php endif; ?>
 				<div class="form-grid">
 					<label class="field full-col">Username<input type="text" name="username" required></label>
-					<label class="field full-col">Password<input type="password" name="password" required></label>
-					<label class="field full-col">Confirm Password<input type="password" name="confirm_password" required></label>
+					<label class="field full-col">Password<input type="password" name="password" required minlength="8"></label>
+					<label class="field full-col">Confirm Password<input type="password" name="confirm_password" required minlength="8"></label>
 				</div>
 				<div class="form-actions">
 					<button class="btn btn-primary" type="submit">Create Account</button>

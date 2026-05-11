@@ -251,6 +251,12 @@ function createProduct(array $productData): int
     return (int) db()->lastInsertId();
 }
 
+function delteProduct(int $productId): int{
+    $stmt = db()->prepare('DELETE FROM products WHERE id = :id');
+    $stmt->execute(['id' => $productId]);
+    return $stmt->rowCount();
+}
+
 function updateProduct(int $id, array $productData): bool
 {
     $name = trim($productData['name'] ?? '');
@@ -302,4 +308,62 @@ function updateProduct(int $id, array $productData): bool
 function isAdmin(): bool
 {
     return !empty($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+}
+
+function getOrdersByUserId(int $userId): array
+{
+    $stmt = db()->prepare(
+        'SELECT
+            o.order_id,
+            o.user_id,
+            o.email,
+            o.`date`,
+            o.payment,
+            oi.product_Id,
+            oi.quantity,
+            oi.price,
+            p.name AS product_name
+         FROM orders o
+         LEFT JOIN order_items oi ON oi.order_id = o.order_id
+         LEFT JOIN products p ON p.id = oi.product_Id
+         WHERE o.user_id = :user_id
+         ORDER BY o.`date` DESC, o.order_id DESC, oi.order_item_id ASC'
+    );
+    
+    $stmt->execute(['user_id' => $userId]);
+
+    $groupedOrders = [];
+
+    foreach ($stmt->fetchAll() as $row) {
+        $orderId = (int) $row['order_id'];
+
+        if (!isset($groupedOrders[$orderId])) {
+            $groupedOrders[$orderId] = [
+                'order_id' => $orderId,
+                'email' => $row['email'],
+                'date' => $row['date'],
+                'payment' => $row['payment'],
+                'items' => [],
+                'total' => 0.0,
+                'item_count' => 0,
+            ];
+        }
+
+        if (!empty($row['product_Id'])) {
+            $quantity = (int) ($row['quantity'] ?? 0);
+            $price = (float) ($row['price'] ?? 0);
+
+            $groupedOrders[$orderId]['items'][] = [
+                'product_id' => (int) $row['product_Id'],
+                'product_name' => $row['product_name'] ?? ('Product #' . (int) $row['product_Id']),
+                'quantity' => $quantity,
+                'price' => $price,
+                'line_total' => $price * $quantity,
+            ];
+            $groupedOrders[$orderId]['total'] += $price * $quantity;
+            $groupedOrders[$orderId]['item_count'] += $quantity;
+        }
+    }
+
+    return array_values($groupedOrders);
 }
