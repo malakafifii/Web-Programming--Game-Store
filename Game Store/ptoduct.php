@@ -6,24 +6,24 @@ require_once __DIR__ . '/includes/db.php';
 	<?php include 'includes/sidebar.php'; ?>
 
 	<?php
-	$productId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-	$product = $productId ? getProductById($productId) : null;
-	if (!$product) {
-	    header('Location: products.php');
-	    exit;
-	}
-	
 	// Handle delete request
 	if (isset($_GET['delete']) && isAdmin()) {
 	    $deleteId = (int) $_GET['delete'];
 	    try {
-	        delteProduct($deleteId);
+	        deleteProduct($deleteId);
 	        $_SESSION['success_message'] = "Product deleted successfully!";
 	        header("Location: products.php");
 	        exit;
 	    } catch (Throwable $e) {
 	        $errorMessage = "Error deleting product: " . $e->getMessage();
 	    }
+	}
+
+	$productId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+	$product = $productId ? getProductById($productId) : null;
+	if (!$product) {
+	    header('Location: products.php');
+	    exit;
 	}
 	?>
 

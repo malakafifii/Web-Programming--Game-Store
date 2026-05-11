@@ -44,7 +44,7 @@ if (isset($_GET['edit'])) {
 if (isset($_GET['delete'])) {
     $deleteId = (int) $_GET['delete'];
     try {
-        delteProduct($deleteId);
+        deleteProduct($deleteId);
         $_SESSION['success_message'] = "Product deleted successfully!";
         header("Location: admin.php");
         exit;

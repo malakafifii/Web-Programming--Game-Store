@@ -251,7 +251,7 @@ function createProduct(array $productData): int
     return (int) db()->lastInsertId();
 }
 
-function delteProduct(int $productId): int{
+function deleteProduct(int $productId): int{
     $stmt = db()->prepare('DELETE FROM products WHERE id = :id');
     $stmt->execute(['id' => $productId]);
     return $stmt->rowCount();
