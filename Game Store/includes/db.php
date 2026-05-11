@@ -87,6 +87,60 @@ function getFeaturedProducts(int $limit = 4): array
     return getProducts($limit);
 }
 
+function getOrders(): array
+{
+    $stmt = db()->query(
+        'SELECT
+            o.order_id,
+            o.email,
+            o.`date`,
+            o.payment,
+            oi.product_Id,
+            oi.quantity,
+            oi.price,
+            p.name AS product_name
+         FROM orders o
+         LEFT JOIN order_items oi ON oi.order_id = o.order_id
+         LEFT JOIN products p ON p.id = oi.product_Id
+         ORDER BY o.`date` DESC, o.order_id DESC, oi.order_item_id ASC'
+    );
+
+    $groupedOrders = [];
+
+    foreach ($stmt->fetchAll() as $row) {
+        $orderId = (int) $row['order_id'];
+
+        if (!isset($groupedOrders[$orderId])) {
+            $groupedOrders[$orderId] = [
+                'order_id' => $orderId,
+                'email' => $row['email'],
+                'date' => $row['date'],
+                'payment' => $row['payment'],
+                'items' => [],
+                'total' => 0.0,
+                'item_count' => 0,
+            ];
+        }
+
+        if (!empty($row['product_Id'])) {
+            $quantity = (int) ($row['quantity'] ?? 0);
+            $price = (float) ($row['price'] ?? 0);
+
+            $groupedOrders[$orderId]['items'][] = [
+                'product_id' => (int) $row['product_Id'],
+                'product_name' => $row['product_name'] ?? ('Product #' . (int) $row['product_Id']),
+                'quantity' => $quantity,
+                'price' => $price,
+                'line_total' => $price * $quantity,
+            ];
+            $groupedOrders[$orderId]['total'] += $price * $quantity;
+            $groupedOrders[$orderId]['item_count'] += $quantity;
+        }
+    }
+
+    return array_values($groupedOrders);
+}
+
 function ensureAuthTables(): void
 {
     db()->exec(
@@ -120,7 +174,8 @@ function getUserByUsername(string $username): ?array
     return $user !== false ? $user : null;
 }
 
-function createBuyerAccount(string $username, string $password): int
+
+function createBuyerAccount(string $username, string $password ): int
 {
     $username = trim($username);
     $password = trim($password);

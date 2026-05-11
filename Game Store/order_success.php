@@ -1,5 +1,6 @@
 <?php 
 session_start();
+require_once __DIR__ . '/includes/db.php';
 
 // Check if order ID was passed
 if (empty($_GET['order_id'])) {
@@ -7,13 +8,65 @@ if (empty($_GET['order_id'])) {
     exit;
 }
 
-$orderId = htmlspecialchars($_GET['order_id']);
+$orderToken = (string) $_GET['order_id'];
 $orderData = $_SESSION['last_order'] ?? null;
 
 if (!$orderData) {
     header('Location: products.php');
     exit;
 }
+
+$savedOrders = $_SESSION['saved_orders'] ?? [];
+if (!isset($savedOrders[$orderToken])) {
+	$orderStmt = db()->prepare('INSERT INTO orders (email, payment) VALUES (:email, :payment)');
+	$itemStmt = db()->prepare(
+		'INSERT INTO order_items (order_id, product_Id, quantity, price)
+		 VALUES (:order_id, :product_id, :quantity, :price)'
+	);
+
+	db()->beginTransaction();
+	try {
+		$orderStmt->execute([
+			'email' => $orderData['email'],
+			'payment' => $orderData['payment'],
+		]);
+
+		$databaseOrderId = (int) db()->lastInsertId();
+
+		foreach ($orderData['items'] as $item) {
+			$productId = (int) ($item['id'] ?? 0);
+			$quantity = (int) ($item['qty'] ?? 0);
+			$price = (float) ($item['price'] ?? 0);
+
+			if ($productId <= 0 || $quantity <= 0) {
+				throw new RuntimeException('Invalid product information in the cart.');
+			}
+
+			$itemStmt->execute([
+				'order_id' => $databaseOrderId,
+				'product_id' => $productId,
+				'quantity' => $quantity,
+				'price' => $price,
+			]);
+		}
+
+		db()->commit();
+		$_SESSION['saved_orders'][$orderToken] = [
+			'db_order_id' => $databaseOrderId,
+		];
+	} catch (Throwable $e) {
+		if (db()->inTransaction()) {
+			db()->rollBack();
+		}
+		http_response_code(500);
+		echo '<pre>Failed to save order: ' . htmlspecialchars($e->getMessage()) . '</pre>';
+		exit;
+	}
+}
+
+$savedOrder = $savedOrders[$orderToken] ?? ($_SESSION['saved_orders'][$orderToken] ?? null);
+$databaseOrderId = is_array($savedOrder) && isset($savedOrder['db_order_id']) ? (int) $savedOrder['db_order_id'] : null;
+$displayOrderId = $databaseOrderId ?? $orderToken;
 
 include 'includes/header.php';
 ?>
@@ -34,8 +87,8 @@ include 'includes/header.php';
 			<article class="form-panel two-col">
 				<h2>Order details</h2>
 				<div style="margin: 20px 0; padding: 16px; background: #f5f5f5; border-radius: 8px;">
-					<p><strong>Order ID:</strong> <code style="font-family: monospace; background: #fff; padding: 4px 8px; border-radius: 4px;"><?php echo $orderId; ?></code></p>
-					<p><strong>Date:</strong> <?php echo date('F j, Y g:i A', (int)$orderId); ?></p>
+					<p><strong>Order ID:</strong> <code style="font-family: monospace; background: #fff; padding: 4px 8px; border-radius: 4px;"><?php echo htmlspecialchars((string) $displayOrderId); ?></code></p>
+					<p><strong>Date:</strong> <?php echo date('F j, Y g:i A'); ?></p>
 					<p><strong>Name:</strong> <?php echo htmlspecialchars($orderData['full_name']); ?></p>
 					<p><strong>Email:</strong> <?php echo htmlspecialchars($orderData['email']); ?></p>
 					<p><strong>Phone:</strong> <?php echo htmlspecialchars($orderData['phone']); ?></p>
